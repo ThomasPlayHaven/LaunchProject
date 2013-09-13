@@ -23,7 +23,10 @@ public class GuiManager : MonoBehaviour {
 
 		if (GUI.Button(new Rect(10, 90, 100, 30), "Fire"))
 		{
-
+			GameObject ourThrowableObject = GameObject.Find("Sphere");
+			Vector3 supertest = new Vector3(0,1000,0);
+			ourThrowableObject.rigidbody.AddForce(supertest + ourPlayer.LaunchVector);
+			//PlayerObject ourThrownObject = ourLauncher.GetComponent<PlayerObject>();
 		}
 	}
 

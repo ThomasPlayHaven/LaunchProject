@@ -19,6 +19,13 @@ public class PlayerObject : MonoBehaviour {
 		set{ yaw = value;}
 	}
 
+	private float roll;
+	public float Roll
+	{
+		get{ return roll;}
+		set{ roll = value;}
+	}
+
 	[SerializeField]
 	private Vector3 launchVector;
 	public Vector3 LaunchVector
@@ -33,13 +40,14 @@ public class PlayerObject : MonoBehaviour {
 	{
 		yaw = this.gameObject.transform.eulerAngles.x;
 		pitch = this.gameObject.transform.eulerAngles.z;
+		roll = this.gameObject.transform.eulerAngles.y;
 	
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
-		launchVector.Set(this.gameObject.transform.eulerAngles.x,0,this.gameObject.transform.eulerAngles.z);
+		launchVector.Set(this.gameObject.transform.eulerAngles.x,this.gameObject.transform.eulerAngles.y,this.gameObject.transform.eulerAngles.z);
 		//this.gameObject.transform.Rotate(Yaw,0,Pitch);
 		//Yaw += 1;
 		//Pitch -=1;
@@ -47,7 +55,7 @@ public class PlayerObject : MonoBehaviour {
 
 	public void updateRotation()
 	{
-		this.gameObject.transform.Rotate(Yaw,0,Pitch);
+		this.gameObject.transform.Rotate(Yaw,Roll,Pitch);
 	}
 
 
