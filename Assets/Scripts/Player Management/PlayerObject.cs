@@ -34,6 +34,9 @@ public class PlayerObject : MonoBehaviour {
 		set{ launchVector = value;}
 	}
 
+	private GameObject ourLauncher; 
+	//ourPlayer = ourLauncher.GetComponent<PlayerObject>();
+
 
 	// Use this for initialization
 	void Start () 
@@ -41,16 +44,14 @@ public class PlayerObject : MonoBehaviour {
 		yaw = this.gameObject.transform.eulerAngles.x;
 		pitch = this.gameObject.transform.eulerAngles.z;
 		roll = this.gameObject.transform.eulerAngles.y;
+		ourLauncher = GameObject.Find("Launcher");
 	
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
-		launchVector.Set(this.gameObject.transform.eulerAngles.x,this.gameObject.transform.eulerAngles.y,this.gameObject.transform.eulerAngles.z);
-		//this.gameObject.transform.Rotate(Yaw,0,Pitch);
-		//Yaw += 1;
-		//Pitch -=1;
+		launchVector = ourLauncher.transform.up;
 	}
 
 	public void updateRotation()
