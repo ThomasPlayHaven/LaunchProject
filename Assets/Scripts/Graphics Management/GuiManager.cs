@@ -3,21 +3,28 @@ using System.Collections;
 
 public class GuiManager : MonoBehaviour {
 
+
+	public GameObject defaultObject;
 	public GameObject ourLauncher;
 	public PlayerObject ourPlayer;
+	public LevelManager ourLevelManager;
 
 		// Use this for initialization
 	void Start () 
 	{
 		ourLauncher = GameObject.Find("LaunchContainer");
 		ourPlayer = ourLauncher.GetComponent<PlayerObject>();
+		defaultObject = GameObject.Find("LevelHandler");
+		ourLevelManager = defaultObject.GetComponent<LevelManager>();
 	}
 
 	void OnGUI()
 	{
+		ourPlayer.Yaw = 0;
+		ourPlayer.Pitch = 0;
 
 
-		if (GUI.RepeatButton(new Rect(10, 10, 100, 30), "Up"))
+		if (GUI.RepeatButton(new Rect(10, 10, 100, 30), "Down"))
 		{
 			
 			ourPlayer.Pitch =0.5f;
@@ -31,7 +38,7 @@ public class GuiManager : MonoBehaviour {
 			ourPlayer.updateRotation();
 			//ourLauncher.Pitch += 1;
 		}
-		if (GUI.RepeatButton(new Rect(10, 50, 100, 30), "Down"))
+		if (GUI.RepeatButton(new Rect(10, 50, 100, 30), "Up"))
 		{
 			ourPlayer.Pitch =-0.5f;
 			ourPlayer.updateRotation();
@@ -50,6 +57,15 @@ public class GuiManager : MonoBehaviour {
 			ourThrowableObject.rigidbody.velocity = Vector3.zero;
 			ourThrowableObject.rigidbody.AddForce(ourPlayer.LaunchVector * 1000);
 			//PlayerObject ourThrownObject = ourLauncher.GetComponent<PlayerObject>();
+		}
+
+		if(GUI.Button(new Rect(10, 130, 50, 50), "1"))
+		{
+			ourLevelManager.load(1);
+		}
+		if(GUI.Button(new Rect(70, 130, 50, 50), "2"))
+		{
+			ourLevelManager.load(2);
 		}
 	}
 
