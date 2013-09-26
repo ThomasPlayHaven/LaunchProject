@@ -5,12 +5,17 @@ public class HealthObject : MonoBehaviour {
 
 	public int ourHealth = 100;
 
-
+	GuiManager manager;
 
 
 	// Use this for initialization
-	void Start () {
-	
+	void Start () 
+	{
+		//Set up to report score.
+		GameObject gm = GameObject.Find("GraphicsManager");
+		if(gm != null)
+			manager = gm.GetComponent<GuiManager>();
+		
 	}
 	
 	// Update is called once per frame
@@ -20,7 +25,10 @@ public class HealthObject : MonoBehaviour {
 
 	void OnCollisionEnter(Collision collision)
 	{
-		ourHealth -= (int)collision.relativeVelocity.magnitude;
+		int damage = (int)collision.relativeVelocity.magnitude;
+		ourHealth -= damage;
+		manager.Score += damage;
+		
 		if(ourHealth <= 0)
 		{
 			//add stuff later

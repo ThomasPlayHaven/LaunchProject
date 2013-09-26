@@ -8,10 +8,35 @@ public class GuiManager : MonoBehaviour {
 	public GameObject ourLauncher;
 	public PlayerObject ourPlayer;
 	public LevelManager ourLevelManager;
-
+	
+	private int _projectiles = 0;
+	public int Projectiles
+	{
+		get
+		{
+			return _projectiles;
+		}
+		set
+		{
+			_projectiles = value;
+		}
+	}
+	
+	private int _goal = 0;
+	public int Goal
+	{
+		get
+		{
+			return _goal;
+		}
+		set
+		{
+			_goal = value;
+		}
+	}
+	
 	[SerializeField]
 	private int _score = 0;
-
 	public int Score
 	{
 		get
@@ -63,7 +88,8 @@ public class GuiManager : MonoBehaviour {
 			ourPlayer.Yaw =0.5f;
 			ourPlayer.updateRotation();
 		}
-
+		
+		GUI.enabled = Projectiles > 0;
 		if (GUI.Button(new Rect(10, 90, 100, 30), "Fire"))
 		{
 			GameObject ourThrowableObject = GameObject.Find("Sphere");
@@ -72,7 +98,9 @@ public class GuiManager : MonoBehaviour {
 			ourThrowableObject.rigidbody.velocity = Vector3.zero;
 			ourThrowableObject.rigidbody.AddForce(ourPlayer.LaunchVector * 1000);
 			//PlayerObject ourThrownObject = ourLauncher.GetComponent<PlayerObject>();
+			Projectiles--;
 		}
+		GUI.enabled = true;
 
 		if(GUI.Button(new Rect(10, 130, 50, 50), "1"))
 		{
@@ -86,7 +114,12 @@ public class GuiManager : MonoBehaviour {
 		
 		GUI.Box(new Rect(270,10,100,30),"");
 		GUI.Label(new Rect(285,15,80,30),"Score: " + Score);
-
+		
+		GUI.Box(new Rect(380,10,100,30),"");
+		GUI.Label(new Rect(395,15, 80,30),"Goal: " + Goal);
+		
+		GUI.Box(new Rect(490,10,100,30),"");
+		GUI.Label(new Rect(505,15, 80,30),"Projectiles: " + Projectiles);
 	}
 
 
@@ -98,7 +131,7 @@ public class GuiManager : MonoBehaviour {
 
 	void OnDrawGizmos()
 	{
-		Gizmos.color = Color.yellow;
-		Gizmos.DrawRay(ourLauncher.transform.position, ourPlayer.LaunchVector *3);
+		//Gizmos.color = Color.yellow;
+		//Gizmos.DrawRay(ourLauncher.transform.position, ourPlayer.LaunchVector *3);
 	}
 }
