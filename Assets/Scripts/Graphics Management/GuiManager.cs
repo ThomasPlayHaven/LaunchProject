@@ -9,6 +9,21 @@ public class GuiManager : MonoBehaviour {
 	public PlayerObject ourPlayer;
 	public LevelManager ourLevelManager;
 
+	[SerializeField]
+	private int _score = 0;
+
+	public int Score
+	{
+		get
+		{
+			return _score;
+		}
+		set
+		{
+			_score = value;
+		}
+	}
+
 		// Use this for initialization
 	void Start () 
 	{
@@ -67,6 +82,11 @@ public class GuiManager : MonoBehaviour {
 		{
 			ourLevelManager.load(2);
 		}
+
+		
+		GUI.Box(new Rect(270,10,100,30),"");
+		GUI.Label(new Rect(285,15,80,30),"Score: " + Score);
+
 	}
 
 
@@ -79,6 +99,6 @@ public class GuiManager : MonoBehaviour {
 	void OnDrawGizmos()
 	{
 		Gizmos.color = Color.yellow;
-		Gizmos.DrawRay(ourLauncher.transform.position, ourPlayer.LaunchVector);
+		Gizmos.DrawRay(ourLauncher.transform.position, ourPlayer.LaunchVector *3);
 	}
 }
