@@ -8,12 +8,15 @@ public class LevelManager : MonoBehaviour {
 
 	public GameObject currentLevel;
 	public GuiManager guiMan;
+	public int currentLevelNumber = 0;
 
-	public void load(int levelNumber)
+	public void Load(int levelNumber)
 	{
 		levelNumber--;
 		if (levelNumber >= 0 && levelNumber < Levels.Count)
 		{
+			//Need to increment back up to 1 because we're silly and already decremented to index approprate numbers
+			currentLevelNumber = levelNumber+1;
 			if(currentLevel != null)
 			{
 				Destroy(currentLevel);
@@ -30,10 +33,13 @@ public class LevelManager : MonoBehaviour {
 		}
 		else
 		{
-			Debug.Log("Trying to load a level that does not exist.");
+			Debug.Log("Trying to Load a level that does not exist.");
 		}
-		
-		
+	}
+	
+	public void ReloadLevel()
+	{
+		Load(currentLevelNumber);
 	}
 
 	// Use this for initialization

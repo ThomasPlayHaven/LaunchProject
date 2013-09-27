@@ -12,6 +12,16 @@ public class Explosive : MonoBehaviour
 	private float force = 10f;
 	[SerializeField]
 	private bool primed = true;
+	public bool Primed
+	{
+		set 
+		{ 
+			primed = value;
+			EnablePrimedParticle();
+		}
+		get { return primed; }
+	}
+	
 	[SerializeField]
 	private float upDistance = 0.2f;
 	[SerializeField]
@@ -22,6 +32,15 @@ public class Explosive : MonoBehaviour
 	
 	}
 	
+	public void EnablePrimedParticle()
+	{
+		if(primed = true)
+		{
+			ThrownObject thrown = this.gameObject.GetComponent<ThrownObject>();
+			thrown.ExplosionPowerUp = true;
+		}
+	}
+	
 	// Update is called once per frame
 	void Update () {
 	
@@ -30,6 +49,9 @@ public class Explosive : MonoBehaviour
 	public void Explode()
 	{
 		Debug.Log("Exploding");
+		
+		//for disabling the particle effect if needed.
+		
 		Collider[] victims = Physics.OverlapSphere(this.gameObject.transform.position, radius);
 		
 		foreach(Collider c in victims)
@@ -49,14 +71,18 @@ public class Explosive : MonoBehaviour
 		//Only explode on objects that can be hurt, and if we're primed
 		if(primed && col.collider.GetComponent<HealthObject>() != null)
 		{
-			primed = false;
 			Explode();
+			
+			//Disable the primed status and primed particle effect.
+			ThrownObject thrown = this.gameObject.GetComponent<ThrownObject>();
+			thrown.ExplosionPowerUp = false;
+			primed = false;
 		}
 	}
 	
 	void OnGUI()
 	{
-		if(GUI.Button(new Rect(0, 200, 100, 50), "PRIME"))
-			primed = true;
+		//if(GUI.Button(new Rect(10, 200, 100, 50), "PRIME"))
+		//	primed = true;
 	}
 }
