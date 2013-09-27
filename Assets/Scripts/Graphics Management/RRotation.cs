@@ -32,6 +32,8 @@ public class RRotation : MonoBehaviour {
 		}
 	}
 
+	private float ourRan = 0f;
+
 	// Use this for initialization
 	void Start () {
 
@@ -45,7 +47,7 @@ public class RRotation : MonoBehaviour {
 	void Update () 
 	{
 			
-			this.transform.Rotate(Random.value,Random.value,Random.value);
+			this.transform.Rotate(ourRan,ourRan,ourRan);
 			this.transform.localPosition = this.transform.localPosition + new Vector3(0,-dropSpeed,0);
 
 			if(this.transform.localPosition.y < 100)
@@ -69,6 +71,8 @@ public class RRotation : MonoBehaviour {
 		else if(Type == 2)
 		{
 			dropSpeed = (Random.Range(0.10f,0.20f));
-		}	
+		}
+
+		ourRan = Random.value;	
 	}
 }
