@@ -15,20 +15,7 @@ public class TitleGuiManager : MonoBehaviour {
 	[SerializeField]
 	public Texture2D storeTex;
 
-	//A simple enum to know what screen we are currently on
-	enum State
-	{
-		Title,
-		Credits,
-		Options,
-		Store
-	};
-
-	State ourState;
-
-
 	private PlayHavenHandler _ourHandler;
-
 
 	[SerializeField]
 	public PlayHavenHandler ourHandler
@@ -42,11 +29,25 @@ public class TitleGuiManager : MonoBehaviour {
 			_ourHandler = value;
 		}
 	}
+
+	//A simple enum to know what screen we are currently on
+	enum State
+	{
+		Title,
+		Credits,
+		Options,
+		Store
+	};
+
+	State ourState;
+
+
 	void Init()
 	{
 		GameObject simpleObject = GameObject.Find("PHHandler");
 		ourHandler = simpleObject.GetComponent<PlayHavenHandler>();
 		ourState = State.Title;
+
 	}
 
 	// Use this for initialization
@@ -85,6 +86,11 @@ public class TitleGuiManager : MonoBehaviour {
 			if (GUI.Button(new Rect(Screen.width / 2 - 30, Screen.height / 2 + 140, 60, 50), "Credits"))
 			{
 				ourState = State.Credits;
+			}
+
+			if (GUI.Button(new Rect(Screen.width / 2 - 30, Screen.height / 2 + 180, 60, 50), "More Games"))
+			{
+				ourHandler.callContent("more_games");
 			}
 
 		}

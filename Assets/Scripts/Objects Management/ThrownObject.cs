@@ -23,8 +23,9 @@ public class ThrownObject : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		ourPS_Obj = GameObject.Find("Thrown PS");
-		ourPS_PS = ourPS_Obj.GetComponent<ParticleSystem>();
+		ourPS_Obj = this.gameObject;
+		//ourPS_Obj.FindChild
+		ourPS_PS = ourPS_Obj.GetComponentInChildren<ParticleSystem>();
 	}
 	
 	// Update is called once per frame
