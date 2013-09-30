@@ -4,6 +4,21 @@ using System.Collections;
 public class TitleGuiManager : MonoBehaviour {
 
 	[SerializeField]
+	private int _offset = 0;
+
+	public int Offset
+	{
+		get
+		{
+			return _offset;
+		}
+		set
+		{
+			_offset = value;
+		}
+	}
+
+	[SerializeField]
 	public Texture2D logo;
 
 	[SerializeField]
@@ -78,6 +93,8 @@ public class TitleGuiManager : MonoBehaviour {
 		GameObject simpleObject = GameObject.Find("PHHandler");
 		ourHandler = simpleObject.GetComponent<PlayHavenHandler>();
 		ourState = State.Title;
+
+		Offset = Screen.width / 2;
 
 	}
 
