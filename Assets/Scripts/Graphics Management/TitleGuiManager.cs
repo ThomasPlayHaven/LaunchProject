@@ -15,9 +15,10 @@ public class TitleGuiManager : MonoBehaviour {
 	[SerializeField]
 	public Texture2D storeTex;
 
+	[SerializeField]
 	private PlayHavenHandler _ourHandler;
 
-	[SerializeField]
+	
 	public PlayHavenHandler ourHandler
 	{
 		get
@@ -27,6 +28,36 @@ public class TitleGuiManager : MonoBehaviour {
 		set
 		{
 			_ourHandler = value;
+		}
+	}
+
+	[SerializeField]
+	private int _musicVolume = 100;
+
+	public int MusicVolume
+	{
+		get
+		{
+			return _musicVolume;
+		}
+		set
+		{
+			_musicVolume = value;
+		}
+	}
+
+	[SerializeField]
+	private int _soundVolume = 100;
+
+	public int SoundVolume
+	{
+		get
+		{
+			return _soundVolume;
+		}
+		set
+		{
+			_soundVolume = value;
 		}
 	}
 
@@ -68,27 +99,27 @@ public class TitleGuiManager : MonoBehaviour {
 		{
 			GUI.Label(new Rect(Screen.width/2 - (logo.width/2 - 25), 40, logo.width, logo.height), logo);
 
-			if (GUI.Button(new Rect(Screen.width / 2 - 25, Screen.height / 2 - 40, 50, 50), "Play"))
+			if (GUI.Button(new Rect(Screen.width / 2 - 25, Screen.height / 2 - 80, 50, 50), "Play"))
 			{
 				Application.LoadLevel("GameScene");
 			}
 
-			if (GUI.Button(new Rect(Screen.width / 2 - 30, Screen.height / 2 + 20, 60, 50), "Options"))
+			if (GUI.Button(new Rect(Screen.width / 2 - 30, Screen.height / 2 - 20 , 60, 50), "Options"))
 			{
 				ourState = State.Options;
 			}
 
-			if (GUI.Button(new Rect(Screen.width / 2 - 30, Screen.height / 2 + 80, 60, 50), "Store"))
+			if (GUI.Button(new Rect(Screen.width / 2 - 30, Screen.height / 2 + 40, 60, 50), "Store"))
 			{
 				ourState = State.Store;
 			}
 
-			if (GUI.Button(new Rect(Screen.width / 2 - 30, Screen.height / 2 + 140, 60, 50), "Credits"))
+			if (GUI.Button(new Rect(Screen.width / 2 - 30, Screen.height / 2 + 100, 60, 50), "Credits"))
 			{
 				ourState = State.Credits;
 			}
 
-			if (GUI.Button(new Rect(Screen.width / 2 - 30, Screen.height / 2 + 180, 60, 50), "More Games"))
+			if (GUI.Button(new Rect(Screen.width / 2 - 45, Screen.height / 2 + 160, 90, 50), "More Games"))
 			{
 				ourHandler.callContent("more_games");
 			}
@@ -97,10 +128,51 @@ public class TitleGuiManager : MonoBehaviour {
 		if(ourState == State.Options)
 		{
 			GUI.Label(new Rect(Screen.width/2 - (optionsTex.width/2 - 25), 40, optionsTex.width, optionsTex.height), optionsTex);
-			if (GUI.Button(new Rect(Screen.width / 2 - 50, Screen.height / 2 - 30, 100, 50), "Return to Title"))
+			if (GUI.Button(new Rect(Screen.width / 2 - 50, Screen.height / 2 - 60, 100, 50), "Return to Title"))
 			{
 				ourState = State.Title;
 			}
+
+			//Music Volume Start
+			if (GUI.RepeatButton(new Rect(Screen.width / 2 - 85, Screen.height / 2, 20, 50), "-"))
+			{
+				if(MusicVolume != 0)
+				{
+					MusicVolume--;
+				}
+			}
+
+			GUI.Box(new Rect(Screen.width / 2 - 60, Screen.height / 2, 120, 50), "Music Volume:" + MusicVolume);
+
+			if (GUI.RepeatButton(new Rect(Screen.width / 2 + 65, Screen.height / 2, 20, 50), "+"))
+			{
+				if(MusicVolume != 100)
+				{
+					MusicVolume++;
+				}
+			}
+			//Music Volume End
+
+
+			//Sound Volume Start
+			if (GUI.RepeatButton(new Rect(Screen.width / 2 - 85, Screen.height / 2 + 65, 20, 50), "-"))
+			{
+				if(SoundVolume != 0)
+				{
+					SoundVolume--;
+				}
+			}
+
+			GUI.Box(new Rect(Screen.width / 2 - 60, Screen.height / 2 + 65, 120, 50), "Sound Volume:" + SoundVolume);
+
+			if (GUI.RepeatButton(new Rect(Screen.width / 2 + 65, Screen.height / 2 + 65, 20, 50), "+"))
+			{
+				if(SoundVolume != 100)
+				{
+					SoundVolume++;
+				}
+			}
+			//Sound Volume End
 		}
 		if(ourState == State.Credits)
 		{

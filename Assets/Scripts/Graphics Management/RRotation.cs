@@ -53,7 +53,7 @@ public class RRotation : MonoBehaviour {
 			if(this.transform.localPosition.y < 100)
 			{
 				calculateDropSpeed();
-				this.transform.localPosition = new Vector3((int)(Random.Range(6.0f,8.0f) * -10),127,(int)(Random.Range(3.0f,5.0f) * 10));
+				this.transform.localPosition = new Vector3((int)(Random.Range(6.4f,8.0f) * -10),127,(int)(Random.Range(3.0f,5.0f) * 10));
 			}
 
 	}
