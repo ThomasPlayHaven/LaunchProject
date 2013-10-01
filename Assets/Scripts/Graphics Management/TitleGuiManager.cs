@@ -45,6 +45,12 @@ public class TitleGuiManager : MonoBehaviour {
 
 	[SerializeField]
 	public Texture2D storeTex;
+
+	[SerializeField]
+	public Texture2D powerTex;
+
+	[SerializeField]
+	public Texture2D projectileTex;
 	//Gui Elements End
 
 	[SerializeField]
@@ -106,7 +112,9 @@ public class TitleGuiManager : MonoBehaviour {
 		Title,
 		Credits,
 		Options,
-		Store
+		Store,
+		PowerUps,
+		SpecialObjects
 	};
 
 	State ourState;
@@ -139,7 +147,7 @@ public class TitleGuiManager : MonoBehaviour {
 		 if (Input.touchCount == 1) 
 		{
             ProcessSwipe();
-            OffsetW = _swipeOrigin.x;
+            //OffsetW = _swipeDestination.x;
         }
         /*		
 		else if(Input.GetMouseButton(1))
@@ -155,10 +163,12 @@ public class TitleGuiManager : MonoBehaviour {
 	}
 
 	
+	//Basically one giant state machine.
 
 	void OnGUI()
 	{
 		GUI.BeginGroup(new Rect(0 + OffsetW,0 + OffsetH,Screen.width,Screen.height));
+		//Default State aka Title Screen
 		if(ourState == State.Title)
 		{
 			GUI.Label(new Rect(Screen.width / 2 - (logo.width/2 - 25), 40, logo.width, logo.height), logo);
@@ -189,6 +199,7 @@ public class TitleGuiManager : MonoBehaviour {
 			}
 
 		}
+		//Options Screen
 		if(ourState == State.Options)
 		{
 			GUI.Label(new Rect(Screen.width/2 - (optionsTex.width/2 - 25), 40, optionsTex.width, optionsTex.height), optionsTex);
@@ -238,6 +249,7 @@ public class TitleGuiManager : MonoBehaviour {
 			}
 			//Sound Volume End
 		}
+		//Credits Screen
 		if(ourState == State.Credits)
 		{
 			GUI.Label(new Rect(Screen.width/2 - (creditsTex.width/2 - 25), 40, creditsTex.width, creditsTex.height), creditsTex);
@@ -246,6 +258,7 @@ public class TitleGuiManager : MonoBehaviour {
 				ourState = State.Title;
 			}
 		}
+		//Store Screen
 		if(ourState == State.Store)
 		{
 			GUI.Label(new Rect(Screen.width/2 - (storeTex.width/2 - 25), 40, storeTex.width, storeTex.height), storeTex);
@@ -253,15 +266,51 @@ public class TitleGuiManager : MonoBehaviour {
 			{
 				ourState = State.Title;
 			}
+			if (GUI.Button(new Rect(Screen.width / 2 - 50, Screen.height / 2 + 30, 100, 50), "Power Ups"))
+			{
+				ourState = State.PowerUps;
+			}
+			if (GUI.Button(new Rect(Screen.width / 2 - 50, Screen.height / 2 + 90, 100, 50), "Special Throwables"))
+			{
+				ourState = State.SpecialObjects;
+			}
+		}
+		//Store Subscreen - Power Ups Screen
+		if(ourState == State.PowerUps)
+		{
+			GUI.Label(new Rect(Screen.width/2 - (storeTex.width/2 - 25), 40, powerTex.width, powerTex.height), powerTex);
+			if (GUI.Button(new Rect(Screen.width / 2 - 50, Screen.height / 2 - 30, 100, 50), "Return to Store"))
+			{
+				ourState = State.Store;
+			}
+			if (GUI.Button(new Rect(Screen.width / 2 - 50, Screen.height / 2 + 30, 100, 50), "Buy Explosion"))
+			{
+				//Handle Buy Code
+			}
+		}
+		//Store Subscreen - Special Objects Screen
+		if(ourState == State.SpecialObjects)
+		{
+			GUI.Label(new Rect(Screen.width/2 - (storeTex.width/2 - 25), 40, projectileTex.width, projectileTex.height), projectileTex);
+			if (GUI.Button(new Rect(Screen.width / 2 - 50, Screen.height / 2 - 30, 100, 50), "Return to Store"))
+			{
+				ourState = State.Store;
+			}
+
+			if (GUI.Button(new Rect(Screen.width / 2 - 50, Screen.height / 2 + 30, 100, 50), "Buy Cone"))
+			{
+				//Handle Buy Code
+			}
 		}
 		GUI.EndGroup();
 	}
 
 	//This is where we calculate how much to swipe
 	public void ProcessSwipe()
-	{	
+	{	 
+
 		//Makes sure that we are at exactly 2 touch inputs
-		if(Input.touchCount < 2)
+		if(Input.touchCount < 1)
 		{
 			Debug.Log("Less than 2 inputs");
 			return;
@@ -270,17 +319,23 @@ public class TitleGuiManager : MonoBehaviour {
 		//YOU'VE GOT THE TOUCH
 		Touch theTouch = Input.touches[0];
 		//If for whatever reason the delta is zero cancel out
+		/*
 		if(theTouch.deltaPosition == Vector2.zero)
 		{
 			Debug.Log("The Touch contained no delta");
 			return;
 		}
+		*/
 
+		/*
 		Vector2 speedVector = theTouch.deltaPosition * theTouch.deltaTime;
 
-		float currentSpeed = speedVector.magnitude;
+		float currentSpeed = speedVector.magnitude * 300;
 
 		bool swipeActive = (currentSpeed > 1.0f);
+
+		Debug.Log("Current swipe speed is: " +currentSpeed);
+		Debug.Log("Is swipe active?: " + swipeActive);
 
 		if(swipeActive)
 		{
@@ -300,14 +355,15 @@ public class TitleGuiManager : MonoBehaviour {
 		}
 
 		swipeWasActive = swipeActive;
-		/*
-		Vector2 touchDeltaPosition = Input.GetTouch(0).deltaPosition;
-        if(touchDeltaPosition.x > 1.0f || touchDeltaPosition.x < -1.0f)
+		*/
+		
+		Vector2 touchDeltaPosition = Input.GetTouch(0).deltaPosition * 20;
+        if(touchDeltaPosition.x > 2.0f || touchDeltaPosition.x < -2.0f)
         {
-          	OffsetW += Mathf.Clamp(touchDeltaPosition.x,-5.0f,5.0f);
+          	OffsetW += Mathf.Clamp(touchDeltaPosition.x,-50.0f,50.0f);
         }
-        */
-        //Debug.Log("Touch Delta Position X: " + touchDeltaPosition.x);
-        //Debug.Log("OffsetW: " + OffsetW);
+        
+        Debug.Log("Touch Delta Position X: " + touchDeltaPosition.x);
+        Debug.Log("OffsetW: " + OffsetW);
 	}
 }
