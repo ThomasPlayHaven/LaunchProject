@@ -3,18 +3,34 @@ using System.Collections;
 
 public class TitleGuiManager : MonoBehaviour {
 
+	//Gui Elements Start
 	[SerializeField]
-	private int _offset = 0;
+	private float _offsetW = 0;
 
-	public int Offset
+	public float OffsetW
 	{
 		get
 		{
-			return _offset;
+			return _offsetW;
 		}
 		set
 		{
-			_offset = value;
+			_offsetW = value;
+		}
+	}
+
+	[SerializeField]
+	private int _offsetH = 0;
+
+	public int OffsetH
+	{
+		get
+		{
+			return _offsetH;
+		}
+		set
+		{
+			_offsetH = value;
 		}
 	}
 
@@ -29,6 +45,7 @@ public class TitleGuiManager : MonoBehaviour {
 
 	[SerializeField]
 	public Texture2D storeTex;
+	//Gui Elements End
 
 	[SerializeField]
 	private PlayHavenHandler _ourHandler;
@@ -46,6 +63,7 @@ public class TitleGuiManager : MonoBehaviour {
 		}
 	}
 
+	//Options Elements Start
 	[SerializeField]
 	private int _musicVolume = 100;
 
@@ -75,6 +93,12 @@ public class TitleGuiManager : MonoBehaviour {
 			_soundVolume = value;
 		}
 	}
+	//Options Elements End
+
+	//For swipe
+	private Vector2 _swipeOrigin = Vector2.zero;
+	private Vector2 _swipeDestination = Vector2.zero;
+	private bool swipeWasActive = false;
 
 	//A simple enum to know what screen we are currently on
 	enum State
@@ -94,7 +118,8 @@ public class TitleGuiManager : MonoBehaviour {
 		ourHandler = simpleObject.GetComponent<PlayHavenHandler>();
 		ourState = State.Title;
 
-		Offset = Screen.width / 2;
+		OffsetW = 0;
+		OffsetH = 0;
 
 	}
 
@@ -102,19 +127,41 @@ public class TitleGuiManager : MonoBehaviour {
 	void Start () {
 		Init();
 		ourHandler.doOpen();
+		Input.multiTouchEnabled = true;
 		
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
+
+		//OffsetW++;
+
+		 if (Input.touchCount == 1) 
+		{
+            ProcessSwipe();
+            OffsetW = _swipeOrigin.x;
+        }
+        /*		
+		else if(Input.GetMouseButton(1))
+		{
+
+			//OffsetW--;
+			OffsetW -= Mathf.Clamp(Input.mousePosition.x,-20.0f,20.0f);
+			//OffsetW -= Input.mousePosition.x;
+			Debug.Log("Mouse X: " + (int)Input.mousePosition.x);
+		}
+		*/
+		OffsetW = Mathf.Clamp(OffsetW,-900,0);
 	}
+
+	
 
 	void OnGUI()
 	{
+		GUI.BeginGroup(new Rect(0 + OffsetW,0 + OffsetH,Screen.width,Screen.height));
 		if(ourState == State.Title)
 		{
-			GUI.Label(new Rect(Screen.width/2 - (logo.width/2 - 25), 40, logo.width, logo.height), logo);
+			GUI.Label(new Rect(Screen.width / 2 - (logo.width/2 - 25), 40, logo.width, logo.height), logo);
 
 			if (GUI.Button(new Rect(Screen.width / 2 - 25, Screen.height / 2 - 80, 50, 50), "Play"))
 			{
@@ -207,5 +254,60 @@ public class TitleGuiManager : MonoBehaviour {
 				ourState = State.Title;
 			}
 		}
+		GUI.EndGroup();
+	}
+
+	//This is where we calculate how much to swipe
+	public void ProcessSwipe()
+	{	
+		//Makes sure that we are at exactly 2 touch inputs
+		if(Input.touchCount < 2)
+		{
+			Debug.Log("Less than 2 inputs");
+			return;
+		}
+
+		//YOU'VE GOT THE TOUCH
+		Touch theTouch = Input.touches[0];
+		//If for whatever reason the delta is zero cancel out
+		if(theTouch.deltaPosition == Vector2.zero)
+		{
+			Debug.Log("The Touch contained no delta");
+			return;
+		}
+
+		Vector2 speedVector = theTouch.deltaPosition * theTouch.deltaTime;
+
+		float currentSpeed = speedVector.magnitude;
+
+		bool swipeActive = (currentSpeed > 1.0f);
+
+		if(swipeActive)
+		{
+			if( !swipeWasActive) 
+			{
+				Debug.Log("Swipe origin updated");
+				_swipeOrigin = theTouch.position;
+			}
+		}
+		else
+		{
+			if(swipeWasActive)
+			{
+				_swipeDestination = theTouch.position;
+				Debug.Log("Swipe Complete");
+			}
+		}
+
+		swipeWasActive = swipeActive;
+		/*
+		Vector2 touchDeltaPosition = Input.GetTouch(0).deltaPosition;
+        if(touchDeltaPosition.x > 1.0f || touchDeltaPosition.x < -1.0f)
+        {
+          	OffsetW += Mathf.Clamp(touchDeltaPosition.x,-5.0f,5.0f);
+        }
+        */
+        //Debug.Log("Touch Delta Position X: " + touchDeltaPosition.x);
+        //Debug.Log("OffsetW: " + OffsetW);
 	}
 }

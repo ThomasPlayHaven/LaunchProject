@@ -113,8 +113,8 @@ public class GuiManager : MonoBehaviour {
 			GUI.enabled = Projectiles > 0;
 			if (GUI.Button(new Rect(10, 90, 100, 30), "Fire"))
 			{
-				GameObject ourThrowableObject = GameObject.Find("Projectile");
-				ourThrowableObject.transform.position = ourLauncher.transform.position + ourPlayer.LaunchVector * 2;
+				GameObject ourThrowableObject = GameObject.Find("Projectile3");
+				ourThrowableObject.transform.position = ourLauncher.transform.position + ourPlayer.LaunchVector * 2.8f;
 				//Vector3 supertest = new Vector3(0,1000,0);
 				ourThrowableObject.rigidbody.velocity = Vector3.zero;
 				ourThrowableObject.rigidbody.AddForce(ourPlayer.LaunchVector * 1000);
