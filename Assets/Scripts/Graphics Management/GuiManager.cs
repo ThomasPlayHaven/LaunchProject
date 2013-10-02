@@ -61,7 +61,7 @@ public class GuiManager : MonoBehaviour {
 		ourPlayer = ourLauncher.GetComponent<PlayerObject>();
 		defaultObject = GameObject.Find("LevelHandler");
 		ourLevelManager = defaultObject.GetComponent<LevelManager>();
-		projectile = GameObject.Find("Projectile");
+		projectile = GameObject.Find("Projectile3");
 	}
 
 	void OnGUI()
@@ -79,6 +79,11 @@ public class GuiManager : MonoBehaviour {
 			if(GUI.Button(new Rect(70, 130, 50, 50), "2"))
 			{
 				ourLevelManager.Load(2);
+				curScreen = ScreenSelect.in_game;
+			}
+			if(GUI.Button(new Rect(130, 130, 50, 50), "3"))
+			{
+				ourLevelManager.Load(3);
 				curScreen = ScreenSelect.in_game;
 			}
 		}
