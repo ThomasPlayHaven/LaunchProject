@@ -101,11 +101,6 @@ public class TitleGuiManager : MonoBehaviour {
 	}
 	//Options Elements End
 
-	//For swipe
-	private Vector2 _swipeOrigin = Vector2.zero;
-	private Vector2 _swipeDestination = Vector2.zero;
-	private bool swipeWasActive = false;
-
 	//A simple enum to know what screen we are currently on
 	enum State
 	{
@@ -142,23 +137,25 @@ public class TitleGuiManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		//OffsetW++;
 
 		 if (Input.touchCount == 1) 
 		{
             ProcessSwipe();
-            //OffsetW = _swipeDestination.x;
-        }
-        /*		
-		else if(Input.GetMouseButton(1))
-		{
 
-			//OffsetW--;
-			OffsetW -= Mathf.Clamp(Input.mousePosition.x,-20.0f,20.0f);
-			//OffsetW -= Input.mousePosition.x;
-			Debug.Log("Mouse X: " + (int)Input.mousePosition.x);
+        }
+
+		//Completes a swipe if one is started but not finished. Also snaps back if not past a point
+		if (Input.touchCount == 0) 
+		{
+			if(OffsetW < -450 && OffsetW != -900)
+			{
+				OffsetW -= 20;
+			}
+			else if(OffsetW > -450 && OffsetW != 0)
+			{
+				OffsetW += 20;
+			}
 		}
-		*/
 		OffsetW = Mathf.Clamp(OffsetW,-900,0);
 	}
 
@@ -313,49 +310,9 @@ public class TitleGuiManager : MonoBehaviour {
 		if(Input.touchCount < 1)
 		{
 			Debug.Log("Less than 2 inputs");
+
 			return;
 		}
-
-		//YOU'VE GOT THE TOUCH
-		Touch theTouch = Input.touches[0];
-		//If for whatever reason the delta is zero cancel out
-		/*
-		if(theTouch.deltaPosition == Vector2.zero)
-		{
-			Debug.Log("The Touch contained no delta");
-			return;
-		}
-		*/
-
-		/*
-		Vector2 speedVector = theTouch.deltaPosition * theTouch.deltaTime;
-
-		float currentSpeed = speedVector.magnitude * 300;
-
-		bool swipeActive = (currentSpeed > 1.0f);
-
-		Debug.Log("Current swipe speed is: " +currentSpeed);
-		Debug.Log("Is swipe active?: " + swipeActive);
-
-		if(swipeActive)
-		{
-			if( !swipeWasActive) 
-			{
-				Debug.Log("Swipe origin updated");
-				_swipeOrigin = theTouch.position;
-			}
-		}
-		else
-		{
-			if(swipeWasActive)
-			{
-				_swipeDestination = theTouch.position;
-				Debug.Log("Swipe Complete");
-			}
-		}
-
-		swipeWasActive = swipeActive;
-		*/
 		
 		Vector2 touchDeltaPosition = Input.GetTouch(0).deltaPosition * 20;
         if(touchDeltaPosition.x > 2.0f || touchDeltaPosition.x < -2.0f)

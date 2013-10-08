@@ -12,14 +12,14 @@ public class PlayHavenHandler : MonoBehaviour
 	public void Awake()
 	{
 		//Creates the reward event
-		PlayHavenManager.instance.OnRewardGiven += OnPlayHavenRewardGiven; 
+		//PlayHavenManager.instance.OnRewardGiven += OnPlayHavenRewardGiven; 
 		PlayHavenManager.instance.OnPurchasePresented += OnPlayHavenPurchase;
 	}
 
 	public void OnDestroy()
 	{
 		//Destroys the reward event
-		PlayHavenManager.instance.OnRewardGiven -= OnPlayHavenRewardGiven; 
+		//PlayHavenManager.instance.OnRewardGiven -= OnPlayHavenRewardGiven; 
 		PlayHavenManager.instance.OnPurchasePresented -= OnPlayHavenPurchase;
 	}
 
@@ -37,7 +37,7 @@ public class PlayHavenHandler : MonoBehaviour
 	//Should handle all reward stuff
 	public void OnPlayHavenRewardGiven(int id,PlayHaven.Reward reward)
 	{
-  		//Debug.Log(“Reward!: “+reward.name);
+  		Debug.Log("Reward recieved: " + reward.name);
 	}
 
 	//Function that gets called when a playhaven purchase is made

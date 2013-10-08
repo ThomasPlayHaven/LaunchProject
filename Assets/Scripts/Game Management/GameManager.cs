@@ -4,12 +4,13 @@ using PlayHaven;
 
 public class GameManager : MonoBehaviour {
 
+	[SerializeField]
 	private PlayHavenHandler _ourHandler;
 
 	private bool paused;
 	private bool dismissed = false;
 
-	[SerializeField]
+	
 	public PlayHavenHandler ourHandler
 	{
 		get
