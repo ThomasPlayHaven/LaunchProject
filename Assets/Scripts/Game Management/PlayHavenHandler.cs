@@ -14,6 +14,7 @@ public class PlayHavenHandler : MonoBehaviour
 		//Creates the reward event
 		//PlayHavenManager.instance.OnRewardGiven += OnPlayHavenRewardGiven; 
 		PlayHavenManager.instance.OnPurchasePresented += OnPlayHavenPurchase;
+		//PlayHavenManager.instance.OptOutStatus = true;
 	}
 
 	public void OnDestroy()

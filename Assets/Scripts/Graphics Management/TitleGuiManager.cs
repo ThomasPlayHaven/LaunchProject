@@ -50,6 +50,12 @@ public class TitleGuiManager : MonoBehaviour {
 	public Texture2D powerTex;
 
 	[SerializeField]
+	public Texture2D credit1Tex;
+
+	[SerializeField]
+	public Texture2D credit2Tex;
+
+	[SerializeField]
 	public Texture2D projectileTex;
 	//Gui Elements End
 
@@ -250,10 +256,12 @@ public class TitleGuiManager : MonoBehaviour {
 		if(ourState == State.Credits)
 		{
 			GUI.Label(new Rect(Screen.width/2 - (creditsTex.width/2 - 25), 40, creditsTex.width, creditsTex.height), creditsTex);
-			if (GUI.Button(new Rect(Screen.width / 2 - 50, Screen.height / 2 - 30, 100, 50), "Return to Title"))
+			if (GUI.Button(new Rect(Screen.width / 2 - 50, Screen.height / 2 + 110, 100, 50), "Return to Title"))
 			{
 				ourState = State.Title;
 			}
+			GUI.Label(new Rect(Screen.width/2 - (credit1Tex.width/2 - 25), Screen.height / 2 - 60, credit1Tex.width, credit1Tex.height), credit1Tex);
+			GUI.Label(new Rect(Screen.width/2 - (credit2Tex.width/2 - 25), Screen.height / 2 , credit2Tex.width, credit2Tex.height), credit2Tex);
 		}
 		//Store Screen
 		if(ourState == State.Store)

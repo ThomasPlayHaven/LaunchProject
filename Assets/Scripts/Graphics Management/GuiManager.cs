@@ -236,6 +236,9 @@ public class GuiManager : MonoBehaviour {
 			GUI.enabled = Projectiles > 0;
 			if (GUI.Button(new Rect(10, 90, 100, 30), "Fire"))
 			{
+				Tracking = true;
+				Following = true;
+
 				ResetProjectile(Projectile.name);
 				//Thread.Sleep(10);
 				FireProjectile(Projectile.name);
@@ -367,6 +370,8 @@ public class GuiManager : MonoBehaviour {
 
 			if(GUI.Button(new Rect(10, 130, 100, 30), "Camera Reset"))
 			{
+				Tracking = false;
+				Following = false;
 				DefaultCameraSetting();
 			}
 
@@ -446,10 +451,20 @@ public class GuiManager : MonoBehaviour {
 
 	public void DefaultCameraSetting()
 	{
-		OurCamera.transform.position = new Vector3(31f,4f,3f);
-		//OurCamera.transform.rotation = Quaternion.FromToRotation(Vector3.up, _defaultCamera.transform.up);
+		//OurCamera.transform.position = new Vector3(31f,4f,3f);
+		/*
+		if(Tracking)
+		{
+			Tracking = !Tracking;
+		}
+		if(Following)
+		{
+			Following = !Following;
+		}
+		*/
+		OurCamera.transform.position = Vector3.Lerp(OurCamera.transform.position,new Vector3(31f,4f,3f), Time.deltaTime);
+
 		OurCamera.transform.LookAt(_pointCamera.transform);
-		//OurCamera.transform.position = _defaultCamera.transform.position;
 	}
 
 	public void CameraLookAt(GameObject look)
@@ -464,11 +479,47 @@ public class GuiManager : MonoBehaviour {
 		OurCamera.transform.position = Vector3.Lerp(OurCamera.transform.position,followAltered, Time.deltaTime);
 	}
 
+	public void CameraDetermine(GameObject firedObject)
+	{
+		//Debug.Log("Velocity X is: " + firedObject.rigidbody.velocity.x);
+		//Debug.Log("Velocity Y is: " + firedObject.rigidbody.velocity.y);
+		//Debug.Log("Velocity Z is: " + firedObject.rigidbody.velocity.z);
+		if(firedObject.rigidbody.velocity.x < 0.2f && firedObject.rigidbody.velocity.x > -0.2f)
+		{
+			if(firedObject.rigidbody.velocity.y < 0.2f && firedObject.rigidbody.velocity.y > -0.2f)
+			{
+				if(firedObject.rigidbody.velocity.z < 0.2f && firedObject.rigidbody.velocity.z > -0.2f)
+				{
+					//Debug.Log("Determined to be not moving");
+					Tracking = false;
+					Following = false;
+					DefaultCameraSetting();
+				}
+				else
+				{
+					Tracking = true;
+					Following = true;
+				}
+			}
+			else
+				{
+					Tracking = true;
+					Following = true;
+				}
+		}
+		else
+				{
+					Tracking = true;
+					Following = true;
+				}
+	}
+
 
 	
 	// Update is called once per frame
 	void Update () 
 	{
+		CameraDetermine(Projectile);
 		if(Tracking)
 		{
 			CameraLookAt(Projectile);
@@ -476,6 +527,10 @@ public class GuiManager : MonoBehaviour {
 		if(Following)
 		{
 			CameraFollow(Projectile);
+		}
+		if(Tracking == false && Following == false)
+		{
+			DefaultCameraSetting();
 		}
 	}
 
