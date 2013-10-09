@@ -149,11 +149,11 @@ public class TitleGuiManager : MonoBehaviour {
 		{
 			if(OffsetW < -450 && OffsetW != -900)
 			{
-				OffsetW -= 20;
+				OffsetW -= 10;
 			}
 			else if(OffsetW > -450 && OffsetW != 0)
 			{
-				OffsetW += 20;
+				OffsetW += 10;
 			}
 		}
 		OffsetW = Mathf.Clamp(OffsetW,-900,0);

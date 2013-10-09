@@ -4,13 +4,62 @@ using PlayHaven;
 
 public class GuiManager : MonoBehaviour {
 
+	#region Fields
 
 	public GameObject defaultObject;
 	public GameObject ourLauncher;
 	
 	public PlayerObject ourPlayer;
 	public LevelManager ourLevelManager;
+
+	[SerializeField]
+	private GameObject _ourCamera;
+	private GameObject _defaultCamera;
+
+	[SerializeField]
+	private bool _tracking = false;
+
+	[SerializeField]
+	private bool _following = false;
+
+	public ScreenSelect curScreen = 0;
 	
+	private int _projectiles = 0;
+
+	private int _goal = 0;
+
+	[SerializeField]
+	private int _score = 0;
+
+	[SerializeField]
+	private PlayHavenHandler _ourHandler;
+
+	[SerializeField]
+	private GameObject _projectile;
+
+	private GameObject _pointCamera;
+
+	#endregion Fields
+
+	#region Properties
+
+	public bool Tracking
+	{
+		get { return _tracking; }
+		set { _tracking = value; }
+	}
+
+	public bool Following
+	{
+		get { return _following; }
+		set { _following = value; }
+	}
+
+	public GameObject OurCamera
+	{
+		get { return _ourCamera; }
+		set { _ourCamera = value; }
+	}	
 	
 	public enum ScreenSelect 
 	{ 
@@ -18,12 +67,11 @@ public class GuiManager : MonoBehaviour {
 		in_game, pause, 
 		settings, 
 		projectile_select,
-		playhaven_menu 
+		playhaven_menu,
+		camera_menu
 	};
 
-	public ScreenSelect curScreen = 0;
 	
-	private int _projectiles = 0;
 	public int Projectiles
 	{
 		get
@@ -36,7 +84,7 @@ public class GuiManager : MonoBehaviour {
 		}
 	}
 	
-	private int _goal = 0;
+	
 	public int Goal
 	{
 		get
@@ -49,8 +97,7 @@ public class GuiManager : MonoBehaviour {
 		}
 	}
 	
-	[SerializeField]
-	private int _score = 0;
+	
 	public int Score
 	{
 		get
@@ -63,8 +110,7 @@ public class GuiManager : MonoBehaviour {
 		}
 	}
 
-	[SerializeField]
-	private GameObject _projectile;
+	
 	public GameObject Projectile
 	{
 		get
@@ -77,8 +123,7 @@ public class GuiManager : MonoBehaviour {
 		}
 	}
 
-	[SerializeField]
-	private PlayHavenHandler _ourHandler;
+	
 	
 	public PlayHavenHandler ourHandler
 	{
@@ -91,6 +136,8 @@ public class GuiManager : MonoBehaviour {
 			_ourHandler = value;
 		}
 	}
+
+	#endregion
 
 	public void Awake()
 	{
@@ -120,6 +167,10 @@ public class GuiManager : MonoBehaviour {
 		defaultObject = GameObject.Find("LevelHandler");
 		ourLevelManager = defaultObject.GetComponent<LevelManager>();
 		Projectile = GameObject.Find("Cone Projectile");
+		OurCamera = GameObject.Find("Main Camera");
+		_pointCamera = GameObject.Find("Point Camera");
+		_defaultCamera = OurCamera;
+		DefaultCameraSetting();
 		PHInit();
 	}
 
@@ -222,6 +273,7 @@ public class GuiManager : MonoBehaviour {
 			if(GUI.Button(new Rect(10, 50, 100, 30), "Level Select"))
 			{
 				curScreen = ScreenSelect.level_select;
+				ResetProjectile(Projectile.name);
 			}
 			if(GUI.Button(new Rect(10, 90, 100, 30), "Restart"))
 			{
@@ -235,11 +287,16 @@ public class GuiManager : MonoBehaviour {
 			}
 			if(GUI.Button(new Rect(10, 170, 120, 30), "Projectile Select"))
 			{
+				ResetProjectile(Projectile.name);
 				curScreen = ScreenSelect.projectile_select;
 			}
 			if(GUI.Button(new Rect(10, 210, 120, 30), "Playhaven Debug"))
 			{
 				curScreen = ScreenSelect.playhaven_menu;
+			}
+			if(GUI.Button(new Rect(10, 250, 120, 30), "Camera Debug"))
+			{
+				curScreen = ScreenSelect.camera_menu;
 			}
 		}
 		if(curScreen == ScreenSelect.projectile_select)
@@ -291,6 +348,30 @@ public class GuiManager : MonoBehaviour {
 				ourHandler.callContent("just_vgp");
 			}
 		}
+		if(curScreen == ScreenSelect.camera_menu)
+		{
+			if(GUI.Button(new Rect(10, 10, 100, 30), "Resume"))
+			{
+				curScreen = ScreenSelect.in_game;
+			}
+
+			if(GUI.Button(new Rect(10, 50, 170, 30), "Toggle Camera Tracking"))
+			{
+				Tracking = !Tracking;
+			}
+
+			if(GUI.Button(new Rect(10, 90, 170, 30), "Toggle Camera Following"))
+			{
+				Following = !Following;
+			}
+
+			if(GUI.Button(new Rect(10, 130, 100, 30), "Camera Reset"))
+			{
+				DefaultCameraSetting();
+			}
+
+
+		}
 		
 	}
 
@@ -302,17 +383,17 @@ public class GuiManager : MonoBehaviour {
 	public void ResetProjectile(string ProjectileName)
 	{
 		GameObject ourThrowableObject = GameObject.Find(ProjectileName);
-		ourThrowableObject.transform.position = new Vector3();
+		ourThrowableObject.transform.position = new Vector3(43,4,-15);
 		ourThrowableObject.transform.rotation = ourPlayer.transform.rotation;
 		ourThrowableObject.rigidbody.velocity = Vector3.zero;
 		ourThrowableObject.rigidbody.angularVelocity = Vector3.zero;
-		ourThrowableObject.transform.position = ourLauncher.transform.position + ourPlayer.LaunchVector * 2.8f;
+		
 	}
 
 	public void FireProjectile()
 	{
 		GameObject ourThrowableObject = GameObject.Find("Sphere Projectile");
-		ourThrowableObject.transform.position = new Vector3();;
+		ourThrowableObject.transform.position = new Vector3();
 		ourThrowableObject.transform.rotation = ourPlayer.transform.rotation;
 		ourThrowableObject.transform.position = ourLauncher.transform.position + ourPlayer.LaunchVector * 2.8f;
 		ourThrowableObject.rigidbody.velocity = Vector3.zero;
@@ -339,13 +420,15 @@ public class GuiManager : MonoBehaviour {
 			forceMultipler = 1000;
 		}
 		GameObject ourThrowableObject = GameObject.Find(ProjectileName);
-		//ourThrowableObject.transform.position = new Vector3();;
+
+		ourThrowableObject.transform.position = ourLauncher.transform.position + ourPlayer.LaunchVector * 2.8f;
 		
 		if(ProjectileName == "Cone Projectile")
 		{
 			ourThrowableObject.transform.Rotate(270,0,0);
 		}
 		
+		//Investigate this
 		ourThrowableObject.rigidbody.AddForce(ourPlayer.LaunchVector * forceMultipler);
 		Projectiles--;
 	}
@@ -361,11 +444,39 @@ public class GuiManager : MonoBehaviour {
   		}
 	}
 
+	public void DefaultCameraSetting()
+	{
+		OurCamera.transform.position = new Vector3(31f,4f,3f);
+		//OurCamera.transform.rotation = Quaternion.FromToRotation(Vector3.up, _defaultCamera.transform.up);
+		OurCamera.transform.LookAt(_pointCamera.transform);
+		//OurCamera.transform.position = _defaultCamera.transform.position;
+	}
+
+	public void CameraLookAt(GameObject look)
+	{
+		OurCamera.transform.LookAt(look.transform);
+	}
+
+	public void CameraFollow(GameObject follow)
+	{
+
+		Vector3 followAltered =  new Vector3(follow.transform.position.x + 5, follow.transform.position.y + 5,follow.transform.position.z);
+		OurCamera.transform.position = Vector3.Lerp(OurCamera.transform.position,followAltered, Time.deltaTime);
+	}
+
 
 	
 	// Update is called once per frame
-	void Update () {
-	
+	void Update () 
+	{
+		if(Tracking)
+		{
+			CameraLookAt(Projectile);
+		}
+		if(Following)
+		{
+			CameraFollow(Projectile);
+		}
 	}
 
 	void OnDrawGizmos()

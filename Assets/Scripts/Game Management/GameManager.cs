@@ -62,7 +62,6 @@ public class GameManager : MonoBehaviour {
 
 	public void WasDismissed(int id, PlayHaven.DismissType type)
 	{
-		Debug.Log("Dismissed");
-		dismissed = true;
+		Debug.Log("Dismissed ID: " + id + " Dismissed Type: " + type);
 	}
 }
