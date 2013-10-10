@@ -275,7 +275,7 @@ public class TitleGuiManager : MonoBehaviour {
 			{
 				ourState = State.PowerUps;
 			}
-			if (GUI.Button(new Rect(Screen.width / 2 - 50, Screen.height / 2 + 90, 100, 50), "Special Throwables"))
+			if (GUI.Button(new Rect(Screen.width / 2 - 70, Screen.height / 2 + 90, 140, 50), "Special Throwables"))
 			{
 				ourState = State.SpecialObjects;
 			}

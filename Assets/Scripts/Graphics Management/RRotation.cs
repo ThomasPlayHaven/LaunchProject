@@ -47,8 +47,8 @@ public class RRotation : MonoBehaviour {
 	void Update () 
 	{
 			
-			this.transform.Rotate(ourRan,ourRan,ourRan);
-			this.transform.localPosition = this.transform.localPosition + new Vector3(0,-dropSpeed,0);
+			this.transform.Rotate(ourRan *(Time.deltaTime + 1f),ourRan*(Time.deltaTime + 1f),ourRan*(Time.deltaTime + 1f));
+			this.transform.localPosition = this.transform.localPosition + new Vector3(0,-dropSpeed * (Time.deltaTime + 1f),0);
 
 			if(this.transform.localPosition.y < 100)
 			{
