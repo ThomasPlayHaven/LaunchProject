@@ -350,6 +350,12 @@ public class GuiManager : MonoBehaviour {
 			{
 				ourHandler.callContent("just_vgp");
 			}
+
+			if(GUI.Button(new Rect(10, 250, 100, 30), "IAP Test"))
+			{
+				ourHandler.BuyProduct("android.test.purchased",1);
+			}
+
 		}
 		if(curScreen == ScreenSelect.camera_menu)
 		{

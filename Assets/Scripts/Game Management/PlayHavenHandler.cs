@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 using System.Collections;
 using PlayHaven;
 
@@ -12,7 +13,7 @@ public class PlayHavenHandler : MonoBehaviour
 	public void Awake()
 	{
 		//Creates the reward event
-		//PlayHavenManager.instance.OnRewardGiven += OnPlayHavenRewardGiven; 
+		PlayHavenManager.instance.OnRewardGiven += OnPlayHavenRewardGiven; 
 		PlayHavenManager.instance.OnPurchasePresented += OnPlayHavenPurchase;
 		//PlayHavenManager.instance.OptOutStatus = true;
 	}
@@ -20,7 +21,7 @@ public class PlayHavenHandler : MonoBehaviour
 	public void OnDestroy()
 	{
 		//Destroys the reward event
-		//PlayHavenManager.instance.OnRewardGiven -= OnPlayHavenRewardGiven; 
+		PlayHavenManager.instance.OnRewardGiven -= OnPlayHavenRewardGiven; 
 		PlayHavenManager.instance.OnPurchasePresented -= OnPlayHavenPurchase;
 	}
 
@@ -49,13 +50,22 @@ public class PlayHavenHandler : MonoBehaviour
 
 	public void BuyProduct(string product_id, int quantity)
 	{
-		PlayHaven.PurchaseResolution ourResolution = PlayHaven.PurchaseResolution.Buy;
+		Debug.Log("Buy Product ProductID: " + product_id + " With a quantity of: " + quantity);
+		try
+		{
+			PlayHaven.PurchaseResolution ourResolution = PlayHaven.PurchaseResolution.Buy;
 
-		PlayHaven.Purchase ourPurchase = new PlayHaven.Purchase();
+			PlayHaven.Purchase ourPurchase = new PlayHaven.Purchase();
 
-		ourPurchase.productIdentifier = product_id;
-		//ourPurchase.resolution = ourResolution;
+			ourPurchase.productIdentifier = product_id;
+			//ourPurchase.resolution = ourResolution;
 
-		PlayHavenManager.instance.ProductPurchaseTrackingRequest(ourPurchase,ourResolution);
+			PlayHavenManager.instance.ProductPurchaseTrackingRequest(ourPurchase,ourResolution);
+		}
+		catch (Exception ex)
+		{
+			Debug.Log("An Exception was caught with: " + ex.Message);
+		}
+		Debug.Log("Buy Finished");
 	}
 }
